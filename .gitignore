@@ -1,8 +1,0 @@
-# pycharm private settings #
-.idea/
-
-# Python #
-__pycache__/
-migrations/
-__init__.py
-.venv/
