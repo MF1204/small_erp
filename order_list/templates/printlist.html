@@ -1,0 +1,358 @@
+{% load static %}
+{% load extras %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    {#    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">#}
+    <meta name="description" content="Responsive Bootstrap 4 Admin &amp; Dashboard Template">
+    <meta name="author" content="Bootlab">
+
+    <title>
+        {% block title %}
+            MEEHONG
+        {% endblock %}
+    </title>
+
+    <link href="{% static 'dist/css/modern.css' %}" rel="stylesheet">
+    <link href="{% static 'dist/css/bootstrap-select.css' %}" rel="stylesheet">
+    <!-- Fontawesome -->
+    <script src="{% static 'fontawesomefree/js/all.js' %}"></script>
+    <link href="{% static 'fontawesomefree/css/all.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font: 9pt "Tahoma";
+        }
+        * {
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+        }
+        .page {
+            width: 29.7cm;
+            min-height: 21cm;
+            padding: 1cm;
+            margin: 10px auto;
+            border-radius: 5px;
+            background: white;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .subpage {
+            padding: 0;
+            margin: 0;
+            width: 95mm;
+            height: 92mm;
+            overflow: hidden;
+            float: left;
+            border: 1px dashed gray;
+        }
+        .onedeposit {
+            border-collapse: collapse;
+            width: 100%;
+            height: 100%;
+        }
+        .onedeposit td {
+            border-bottom: 1px solid black;
+            padding-left: 5px;
+            padding-top: 3px;
+            padding-bottom: 3px;
+            height: 25px;
+            word-break: break-all;
+        }
+        .tdhead {
+            color: #525252;
+            font-weight: bold;
+            width: 20%;
+            border-right: 1px solid black;
+        }
+        .tdcontent {
+            border-right: 1px solid black;
+        }
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+        @media print {
+            .envy {
+                display: none;
+            }
+            .page {
+                width: 297mm;
+                min-height: 210mm;
+                /*padding: 1cm;*/
+                margin: 10px auto;
+                /*border-radius: 5px;*/
+                background: white;
+                /*box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);*/
+                overflow: hidden;
+                position: relative;
+                zoom: 120%;
+            }
+            .subpage {
+                padding: 0;
+                margin: 0;
+                width: 50%;
+                height: 100%;
+                box-sizing: border-box;
+                overflow: hidden;
+                float: left;
+                border: 1px dashed gray;
+            }
+
+        }
+
+   </style>
+</head>
+<body>
+    <div class="book" id="printall">
+        <div class="page" id="page">
+            <div class="card w-100" style="">
+                {% if valuedate == 'order' %}
+                    <table class="table table-bordered table-intel table-md cell-border"
+                           id="bootstrap-table"
+                           style="table-layout: fixed; width: 100%; height: auto; min-height: 700px;">
+                        <thead>
+                        <tr style="font-family: 'NanumSquareL';"
+                            onmousedown="return false" onselect="return true" onmouseup="return true">
+                            <th class="filters" data-sortable="true" id="th-pno" hidden="hidden">pno</th>
+                            <th class="filters" data-sortable="true" id="th-order_date" style="">주문일자</th>
+                            <th class="filters" data-sortable="true" id="th-order_no" style="">주문 No.</th>
+                            <th id="th-state" class="filters" data-sortable="true" style="">진행상태</th>
+                            <th class="filters" data-sortable="true" id="th-customer">고객명</th>
+                            <th class="filters" data-sortable="true" id="th-product_name">품목</th>
+                            <th class="filters" data-sortable="true" id="th-size_option_name">사이즈</th>
+                            <th class="filters" data-sortable="true" id="th-sheet_option_name">시트</th>
+                            <th class="filters" data-sortable="true" id="th-filling_option_name">필링</th>
+                            <th class="filters" data-sortable="true" id="th-boxing_option_name">포장</th>
+                            <th class="filters" data-sortable="true" id="th-phrase_option_name">문구</th>
+                            <th class="filters" data-sortable="true" id="th-count">수량</th>
+                            <th class="filters" data-sortable="true" id="th-total_price">금액</th>
+                            <th class="filters" data-sortable="true" id="th-order_type_name">주문경로</th>
+                            <th class="filters" data-sortable="true" id="th-pay_type_name">결제방법</th>
+                            <th class="filters" data-sortable="true" id="th-pay_check">결제여부</th>
+                            <th class="filters" data-sortable="true" id="th-recipient">수령인</th>
+                            <th class="filters" data-sortable="true" id="th-recipient_phone">연락처</th>
+                            <th class="filters" data-sortable="true" id="th-delivery_option_name">수령방법</th>
+                            <th class="filters" data-sortable="true" id="th-address1">수령주소</th>
+                            <th class="filters" data-sortable="true" id="th-address2">상세주소</th>
+                            <th class="filters" data-sortable="true" id="th-recipient_date">납품일자</th>
+                            <th class="filters" data-sortable="true" id="th-recipient_hour">납품시간</th>
+                            <th class="filters" data-sortable="true" id="th-memo">주문메모</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for order in orderDetail %}
+                            <!-- *** 주문 목록 테이블 상세 *** -->
+                            <tr style="display: table-row; border-color: darkgrey" id="order{{ order.order_no }}">
+                                <td hidden="hidden"><input hidden="hidden" name="pno" id="pno{{ order.pno }}" type="text" value="{{ order.pno }}"></td>
+                                <td id="data-order-date" >{{ order.order_date|date:'y-m-d' }}</td>
+                                <td id="modal{{ order.pno }}" class="order_no" data-toggle="modal" data-target="#sizedModalLg{{ order.pno }}">
+                                    {{ order.date_no|zeroadd:3 }}
+                                </td>
+                                {% if order.state == '주문완료' %}
+                                    <td style="padding: 0"><span id="order_state" class="badge badge-warning">{{ order.state }}</span></td>
+                                {% elif order.state == '제작완료' %}
+                                    <td style="padding: 0"><span id="order_state" class="badge badge-success">{{ order.state }}</span></td>
+                                {% elif order.state == '출고완료' %}
+                                    <td style="padding: 0"><span id="order_state" class="badge badge-primary">{{ order.state }}</span></td>
+                                {% elif order.state == '출고보류' %}
+                                    <td style="padding: 0"><span id="order_state" class="badge badge-secondary">{{ order.state }}</span></td>
+                                {% elif order.state == '출고취소' %}
+                                    <td style="padding: 0"><span id="order_state" class="badge badge-danger">{{ order.state }}</span></td>
+                                {% elif order.state == '기타' %}
+                                    <td style="padding: 0"><span id="order_state" class="badge badge-info">{{ order.state }}</span></td>
+                                {% endif %}
+                                <td>{{ order.customer }}</td>
+                                <td>{{ order.product_name }}</td>
+                                <td>{{ order.size_option_name }}</td>
+                                <td>{{ order.sheet_option_name }}</td>
+                                <td>{{ order.filling_option_name }}</td>
+                                <td>{{ order.boxing_option_name }}</td>
+                                <td>{{ order.phrase }}</td>
+                                <td>{{ order.count }}</td>
+                                <td>{{ order.total_price }}</td>
+                                <td>{{ order.order_type_name }}</td>
+                                <td>{{ order.pay_type_name }}</td>
+                                <td>{{ order.pay_check }}</td>
+                                <td>{{ order.recipient }}</td>
+                                <td>{{ order.recipient_phone }}</td>
+                                <td>{{ order.delivery_option_name }}</td>
+                                <td>{{ order.address1 }}</td>
+                                <td>{{ order.address2 }}</td>
+                                <td>{{ order.receipt_date|date:'y-m-d' }}</td>
+                                <td>{{ order.receipt_hour }}:00</td>
+                                <td>{{ order.memo }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% elif valuedate == 'deploy' %}
+                    <table class="table table-bordered table-intel table-md cell-border"
+                           id="bootstrap-table"
+                           style="table-layout: fixed; width: 100%; height: auto; min-height: 700px;">
+                        <thead>
+                        <tr style="font-family: 'NanumSquareL';"
+                            onmousedown="return false" onselect="return true" onmouseup="return true">
+                            <th class="filters" data-sortable="true" id="th-pno" hidden="hidden">pno</th>
+                            <th class="filters" data-sortable="true" id="th-recipient_date">납품일자</th>
+                            <th class="filters" data-sortable="true" id="th-order_no" style="">주문 No.</th>
+                            <th id="th-state" class="filters" data-sortable="true" style="">진행상태</th>
+                            <th class="filters" data-sortable="true" id="th-customer">고객명</th>
+                            <th class="filters" data-sortable="true" id="th-product_name">품목</th>
+                            <th class="filters" data-sortable="true" id="th-size_option_name">사이즈</th>
+                            <th class="filters" data-sortable="true" id="th-sheet_option_name">시트</th>
+                            <th class="filters" data-sortable="true" id="th-filling_option_name">필링</th>
+                            <th class="filters" data-sortable="true" id="th-boxing_option_name">포장</th>
+                            <th class="filters" data-sortable="true" id="th-phrase_option_name">문구</th>
+                            <th class="filters" data-sortable="true" id="th-count">수량</th>
+                            <th class="filters" data-sortable="true" id="th-total_price">금액</th>
+                            <th class="filters" data-sortable="true" id="th-order_type_name">주문경로</th>
+                            <th class="filters" data-sortable="true" id="th-pay_type_name">결제방법</th>
+                            <th class="filters" data-sortable="true" id="th-pay_check">결제여부</th>
+                            <th class="filters" data-sortable="true" id="th-recipient">수령인</th>
+                            <th class="filters" data-sortable="true" id="th-recipient_phone">연락처</th>
+                            <th class="filters" data-sortable="true" id="th-delivery_option_name">수령방법</th>
+                            <th class="filters" data-sortable="true" id="th-address1">수령주소</th>
+                            <th class="filters" data-sortable="true" id="th-address2">상세주소</th>
+                            <th class="filters" data-sortable="true" id="th-order_date" style="">주문일자</th>
+                            <th class="filters" data-sortable="true" id="th-recipient_hour">납품시간</th>
+                            <th class="filters" data-sortable="true" id="th-memo">주문메모</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for order in orderDetail %}
+                            <!-- *** 주문 목록 테이블 상세 *** -->
+                            <tr style="display: table-row; border-color: darkgrey" id="order{{ order.order_no }}">
+                                <td hidden="hidden"><input hidden="hidden" name="pno" id="pno{{ order.pno }}" type="text" value="{{ order.pno }}"></td>
+                                <td>{{ order.receipt_date|date:'y-m-d' }}</td>
+                                <td id="modal{{ order.pno }}" class="order_no" data-toggle="modal" data-target="#sizedModalLg{{ order.pno }}">
+                                    {{ order.date_no|zeroadd:3 }}
+                                </td>
+                                {% if order.state == '주문완료' %}
+                                    <td style="padding: 0"><span id="order_state" class="badge badge-warning">{{ order.state }}</span></td>
+                                {% elif order.state == '제작완료' %}
+                                    <td style="padding: 0"><span id="order_state" class="badge badge-success">{{ order.state }}</span></td>
+                                {% elif order.state == '출고완료' %}
+                                    <td style="padding: 0"><span id="order_state" class="badge badge-primary">{{ order.state }}</span></td>
+                                {% elif order.state == '출고보류' %}
+                                    <td style="padding: 0"><span id="order_state" class="badge badge-secondary">{{ order.state }}</span></td>
+                                {% elif order.state == '출고취소' %}
+                                    <td style="padding: 0"><span id="order_state" class="badge badge-danger">{{ order.state }}</span></td>
+                                {% elif order.state == '기타' %}
+                                    <td style="padding: 0"><span id="order_state" class="badge badge-info">{{ order.state }}</span></td>
+                                {% endif %}
+                                <td>{{ order.customer }}</td>
+                                <td>{{ order.product_name }}</td>
+                                <td>{{ order.size_option_name }}</td>
+                                <td>{{ order.sheet_option_name }}</td>
+                                <td>{{ order.filling_option_name }}</td>
+                                <td>{{ order.boxing_option_name }}</td>
+                                <td>{{ order.phrase }}</td>
+                                <td>{{ order.count }}</td>
+                                <td>{{ order.total_price }}</td>
+                                <td>{{ order.order_type_name }}</td>
+                                <td>{{ order.pay_type_name }}</td>
+                                <td>{{ order.pay_check }}</td>
+                                <td>{{ order.recipient }}</td>
+                                <td>{{ order.recipient_phone }}</td>
+                                <td>{{ order.delivery_option_name }}</td>
+                                <td>{{ order.address1 }}</td>
+                                <td>{{ order.address2 }}</td>
+                                <td id="data-order-date" >{{ order.order_date|date:'y-m-d' }}</td>
+                                <td>{{ order.receipt_hour }}:00</td>
+                                <td>{{ order.memo }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+
+            </div>
+        </div>
+            <div class="nextpaper" style="page-break-before: always;"></div>
+    </div>
+
+
+    <div style="margin: 0 auto;" class="envy">
+        <button class="btn btn-primary" onclick="printThis();">출력</button>
+        <button class="btn btn-danger" onclick="history.go(-1)">돌아가기</button>
+    </div>
+
+    <script src="{% static '/dist/js/app.js' %}"></script>
+    <script src="{% static '/dist/js/sh1.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.2.1/js/dataTables.select.min.js"></script>
+    <script src="{% static 'dist/js/table_filter.js' %}"></script>
+    <script src="{% static 'dist/js/bootstrap-select.js' %}"></script>
+    <script src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            // 한국어로 변환 (Datatable)
+            <!--
+            var lang_kor = {
+                "decimal": "",
+                "emptyTable": "데이터가 없습니다.",
+                "info": "_START_ - _END_ (총 _TOTAL_ 인)",
+                "infoEmpty": "0명",
+                "infoFiltered": "(전체 _MAX_ 명 중 검색결과)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "_MENU_ 개씩 보기",
+                "loadingRecords": "로딩중...",
+                "processing": "처리중...",
+                "search": "검색 : ",
+                "zeroRecords": "검색된 데이터가 없습니다.",
+                "paginate": {
+                    "first": "첫 페이지",
+                    "last": "마지막 페이지",
+                    "next": "다음",
+                    "previous": "이전"
+                },
+                "aria": {
+                    "sortAscending": " :  오름차순 정렬",
+                    "sortDescending": " :  내림차순 정렬"
+                }
+            };
+            -->
+            // Datatable 설정 및 옵션
+            $('#bootstrap-table').DataTable({
+                pageLength: 25,
+                dom: 'Bfrtip',
+                buttons: ['false'],
+                ordering: false,
+                select: {
+                    style: 'multi',
+                    css: {
+                        backgroundColor: 'pink'
+                    }
+                },
+                info: false,
+                sorting: true,
+                bFilter: false,
+                autoWidth: false,
+                paging: false,
+            });
+        });
+
+        let initBody;
+
+        function printThis() {
+            window.print();
+            history.go(-1);
+        }
+
+    </script>
+
+
+</body>
+
+</html>

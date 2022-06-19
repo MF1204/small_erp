@@ -1,0 +1,265 @@
+{% load static %}
+{% load extras %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    {#    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">#}
+    <meta name="description" content="Responsive Bootstrap 4 Admin &amp; Dashboard Template">
+    <meta name="author" content="Bootlab">
+
+    <title>
+        {% block title %}
+            MEEHONG
+        {% endblock %}
+    </title>
+
+    <link href="{% static 'dist/css/modern.css' %}" rel="stylesheet">
+    <link href="{% static 'dist/css/bootstrap-select.css' %}" rel="stylesheet">
+    <!-- Fontawesome -->
+    <script src="{% static 'fontawesomefree/js/all.js' %}"></script>
+    <link href="{% static 'fontawesomefree/css/all.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font: 9pt "Tahoma";
+        }
+        * {
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+        }
+        .page {
+            width: 21cm;
+            min-height: 29.7cm;
+            padding: 1cm;
+            margin: 10px auto;
+            border-radius: 5px;
+            background: white;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .subpage {
+            padding: 0;
+            margin: 0;
+            width: 95mm;
+            height: 92mm;
+            overflow: hidden;
+            float: left;
+            border: 1px dashed gray;
+        }
+        .onedeposit {
+            border-collapse: collapse;
+            width: 100%;
+            height: 100%;
+        }
+        .onedeposit td {
+            border-bottom: 1px solid black;
+            padding-left: 5px;
+            padding-top: 3px;
+            padding-bottom: 3px;
+            height: 25px;
+            word-break: break-all;
+        }
+        .tdhead {
+            color: #525252;
+            font-weight: bold;
+            width: 20%;
+            border-right: 1px solid black;
+        }
+        .tdcontent {
+            border-right: 1px solid black;
+        }
+        @page {
+            size: A4;
+
+            margin: 0;
+            /*size: landscape; //가로출력시*/
+        }
+        @media print {
+            .envy {
+                display: none;
+            }
+            .page {
+                width: 210mm;
+                min-height: 297mm;
+                /*padding: 1cm;*/
+                margin: 10px auto;
+                /*border-radius: 5px;*/
+                background: white;
+                /*box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);*/
+                overflow: hidden;
+                position: relative;
+                zoom: 120%;
+            }
+            .subpage {
+                padding: 0;
+                margin: 0;
+                width: 50%;
+                height: 100%;
+                box-sizing: border-box;
+                overflow: hidden;
+                float: left;
+                border: 1px dashed gray;
+            }
+
+        }
+
+   </style>
+</head>
+<body>
+    <div class="book" id="printall">
+    </div>
+
+    <div style="margin: 0 auto;" class="envy">
+        <button class="btn btn-primary" onclick="printThis();">출력</button>
+        <button class="btn btn-danger" onclick="self.close();">닫기</button>
+    </div>
+    <script>
+        WritePrintList();
+        function CallPrintList() {
+            let pnoList = opener.document.getElementById('pnoList').value;
+            const response = fetch('/list/printall/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    "X-CSRFToken": '{{ csrf_token }}',
+                },
+                body: JSON.stringify({
+                    'pnoList': pnoList,
+                }),}
+            );
+            return response.then(data => data.json());
+        }
+        async function WritePrintList() {
+            let responseData = await CallPrintList();
+            if (responseData.flag !== true) {
+                ErrorPrint();
+                return false;
+            }
+            let printList = responseData.printlist;
+            TablePrint_Page(printList);
+        }
+
+        function ErrorPrint() {
+            let pageElement = `<h3>500 Interval Error!</h3>`;
+            let canvas = document.getElementById('printall');
+            canvas.innerHTML = pageElement;
+        }
+        function TablePrint_Page(printlist) {
+            let pageElement = ``;
+            for (let i = 0; i < printlist.length; i++) {
+                let tableElement = TablePrint_Table(printlist[i], i + 1);
+                pageElement += `
+                    <div class="page" id="page_${i}">
+                        ${tableElement}
+                    </div>
+                `;
+                let whitepaper = '';
+                if (printlist.length !== 1) {
+                    whitepaper = `<div class="nextpaper" style="page-break-before: always;"></div>`;
+                }
+                pageElement += whitepaper;
+            }
+            let canvas = document.getElementById('printall');
+            canvas.innerHTML = pageElement;
+        }
+        function TablePrint_Table(pnolist, pageNum) {
+            let tableElement = '';
+            let whattime = '';
+            for (let i = 0; i < pnolist.length; i++) {
+                let onedeposit = pnolist[i][0];
+                console.log(onedeposit);
+                if (onedeposit.delivery_option_name === '작업장 픽업' || onedeposit.delivery_option_name === '메세나 픽업') {
+                    whattime = `<td class="tdhead">도착시간</td>`;
+                } else {
+                    whattime = `<td class="tdhead">출고시간</td>`;
+                }
+                tableElement += `
+                    <div class="subpage">
+                        <table class="onedeposit">
+                            <tr>
+                                <td class="tdhead">출고날짜</td>
+                                <td class="tdcontent">${onedeposit.receipt_date }</td>
+                                <td class="tdhead">출고번호</td>
+                                <td class="tdcontent">${ onedeposit.date_no }</td>
+                            </tr>
+                            <tr>
+                                <td class="tdhead">고객명</td>
+                                <td class="tdcontent">${ onedeposit.customer }</td>
+                                <td class="tdhead">고객 Tel.</td>
+                                <td class="tdcontent">${ onedeposit.customer_phone }</td>
+                            </tr>
+                            <tr>
+                                <td class="tdhead">수령인</td>
+                                <td class="tdcontent">${ onedeposit.recipient }</td>
+                                <td class="tdhead">수령인 Tel.</td>
+                                <td class="tdcontent">${ onedeposit.recipient_phone }</td>
+                            </tr>
+                            <tr>
+                                <td class="tdhead">주소</td>
+                                <td colspan="3" class="tdcontent">${ onedeposit.address1 } ${ onedeposit.address2 }</td>
+                            </tr>
+                            <tr>
+                                <td class="tdhead">수령방법</td>
+                                <td class="tdcontent">${ onedeposit.delivery_option_name }</td>
+                                ${ whattime }
+                                <td class="tdcontent">${ onedeposit.receipt_hour }</td>
+                            </tr>
+                            <tr>
+                                <td class="tdhead">품목</td>
+                                <td colspan="3" class="tdcontent">${ onedeposit.product_name } / ${ onedeposit.count }개</td>
+                            </tr>
+                            <tr>
+                                <td class="tdhead">사이즈</td>
+                                <td class="tdcontent">${ onedeposit.size_option_name }</td>
+                                <td class="tdhead">포장</td>
+                                <td class="tdcontent">${ onedeposit.boxing_option_name }</td>
+                            </tr>
+                            <tr>
+                                <td class="tdhead">시트</td>
+                                <td class="tdcontent">${ onedeposit.sheet_option_name }</td>
+                                <td class="tdhead">필링</td>
+                                <td class="tdcontent">${ onedeposit.filling_option_name }</td>
+                            </tr>
+                            <tr>
+                                <td class="tdhead" rowspan="2">문구</td>
+                                <td colspan="3" rowspan="2" class="tdcontent" style="max-height: 50px; overflow: hidden">
+                                    ${ onedeposit.phrase }
+                                </td>
+                            </tr>
+                            <tr></tr>
+                            <tr>
+                                <td colspan="4" rowspan="2" class="tdhead" style="border-bottom: none">주문메모</td>
+                            </tr>
+                            <tr></tr>
+                            <tr>
+                                <td colspan="4" rowspan="2" class="tdcontent" style="height: 80px; border-bottom: none; vertical-align: top; position: relative;">
+                                    ${ onedeposit.memo }
+                                    <p style="position: absolute; right: 5px; bottom: 0; margin-bottom: 5px;">${pageNum} - ${i + 1}</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                `;
+            }
+            return tableElement;
+        }
+
+        let initBody;
+
+        function printThis() {
+            window.print();
+        }
+
+    </script>
+
+</body>
+
+</html>
