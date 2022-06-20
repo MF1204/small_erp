@@ -83,10 +83,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'meehong_dev',
-        'USER': 'dev',
-        'PASSWORD': 'aibiz8008',
-        'HOST': 'database-1-meehong.cpbqlxtmsgmf.ap-northeast-2.rds.amazonaws.com',
+        'NAME': '*******_***',
+        'USER': '***',
+        'PASSWORD': '*********',
+        'HOST': 'database-1-********.cpbqlxtmsgmf.ap-northeast-2.rds.amazonaws.com',
         'PORT': '3306',
     },
 }
